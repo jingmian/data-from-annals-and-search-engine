@@ -18,6 +18,9 @@ for key in key_list:
 with open(result_file, 'w') as f:  # Just use 'w' mode in 3.x
     w = csv.DictWriter(f, csv_dic.keys())
     w.writeheader()
+with open(error_file, 'w') as f:  # Just use 'w' mode in 3.x
+    w = csv.DictWriter(f, {'error_file': ''}.keys())
+    w.writeheader()
 
 index = 0
 for file in file_list:
@@ -91,7 +94,7 @@ for file in file_list:
         error_file_dic = {'error_file': file}
         with open(error_file, 'a') as f:
             w = csv.DictWriter(f, error_file_dic.keys())
-            w.writerow(dic)
+            w.writerow(error_file_dic)
 
 print('FINISH')
 print('FINISH')
