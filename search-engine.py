@@ -36,11 +36,16 @@ for file in file_list:
         print(name)
         dic = {'证券代码': code, '证券简称': name}
         for key in key_list:
-            time.sleep((random.randint(1000, 3000) / 1000.0))
+            time.sleep((random.randint(1000, 5000) / 1000.0))
             url = 'http://www.baidu.com/s?rtt=1&bsst=1&cl=2&tn=news&word='
             word = urllib.parse.quote_plus(name) + '+' + urllib.parse.quote_plus(key)
             url = url + word
-            response = requests.get(url)
+            headers = {"User-Agent": "Mozilla/5.0 (Windows; U; Windows NT 5.1; zh-CN; rv:1.9.1.6) ",
+                       "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+                       "Accept-Language": "en-us",
+                       "Connection": "keep-alive",
+                       "Accept-Charset": "GB2312,utf-8;q=0.7,*;q=0.7"}
+            response = requests.get(url, headers=headers)
             num_str = etree.HTML(response.text).xpath('//span[@class="nums"]/text()')[0]
             num = num_str.replace('找到相关资讯', '').replace('约', '').replace('篇', '').replace(',', '')
             dic[key] = str(num)
@@ -57,6 +62,9 @@ for file in file_list:
 
     except Exception as e:
         print(e)
+        sleep_sec = random.randint(300 * 1000, 600 * 1000) / 1000.0
+        print('被反爬虫了，认输' + str(sleep_sec) + '秒')
+        time.sleep(sleep_sec)
         error_file_dic = {'error_name': name}
         with open(error_file, 'a') as f:
             w = csv.DictWriter(f, error_file_dic.keys())
